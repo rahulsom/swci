@@ -1,0 +1,24 @@
+group 'com.github.rahulsom'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.10'
+
+    compile 'io.github.bonigarcia:webdrivermanager:1.6.1'
+    compile 'org.gebish:geb-core:1.1.1'
+    compile 'org.seleniumhq.selenium:selenium-chrome-driver:3.3.1'
+
+    compile 'de.bytefish.fcmjava:fcmjava-core:1.0'
+    compile 'de.bytefish.fcmjava:fcmjava-client:1.0'
+
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+}
+
+mainClassName = 'com.github.rahulsom.swci.SwciApplication'
