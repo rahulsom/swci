@@ -1,3 +1,14 @@
+buildscript {
+    dependencies {
+        classpath 'com.h2database:h2:1.4.191'
+    }
+}
+
+plugins {
+    id 'nu.studer.jooq' version '2.0.4'
+    id "org.flywaydb.flyway" version "4.1.2"
+}
+
 group 'com.github.rahulsom'
 version '1.0-SNAPSHOT'
 
@@ -5,20 +16,65 @@ apply plugin: 'groovy'
 apply plugin: 'application'
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 dependencies {
+    // Groovy is awesome
     compile 'org.codehaus.groovy:groovy-all:2.4.10'
 
+    // WDM manages browsers. Selenium talks to browsers. Geb makes selenium nicer.
     compile 'io.github.bonigarcia:webdrivermanager:1.6.1'
     compile 'org.gebish:geb-core:1.1.1'
     compile 'org.seleniumhq.selenium:selenium-chrome-driver:3.3.1'
 
-    compile 'de.bytefish.fcmjava:fcmjava-core:1.0'
-    compile 'de.bytefish.fcmjava:fcmjava-client:1.0'
+    compile 'com.google.cloud:google-cloud-pubsub:0.9.4-alpha'
+
+    compile 'com.h2database:h2:1.4.194'
+    jooqRuntime 'com.h2database:h2:1.4.194'
+
+    compile 'org.jooq:jooq'
+
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.6'
+    compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.6'
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }
 
+flyway {
+    url = 'jdbc:h2:file:./swci'
+    user = 'sa'
+    password = 'secret'
+}
+
+jooq {
+    version = '3.9.1'
+    edition = 'OSS'
+
+    swci(sourceSets.main) {
+        jdbc {
+            driver = 'org.h2.Driver'
+            url = 'jdbc:h2:./swci'
+            user = 'sa'
+            password = 'secret'
+        }
+
+        generator {
+            name = 'org.jooq.util.DefaultGenerator'
+            database {
+                name = 'org.jooq.util.h2.H2Database'
+                includes = '.*'
+                excludes = 'information_schema.*'
+            }
+            target {
+                packageName = 'com.github.rahulsom.swci'
+            }
+        }
+    }
+
+}
+
 mainClassName = 'com.github.rahulsom.swci.SwciApplication'
+
+tasks.findByName('generateSwciJooqSchemaSource').dependsOn 'flywayMigrate'
+tasks.findByName('compileGroovy').dependsOn 'generateSwciJooqSchemaSource'

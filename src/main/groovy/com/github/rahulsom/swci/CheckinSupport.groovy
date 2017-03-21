@@ -15,7 +15,6 @@ class CheckinSupport {
             $('#lastName') << lastName
 
             $('#submitButton').click()
-
         }.quit()
     }
 }
