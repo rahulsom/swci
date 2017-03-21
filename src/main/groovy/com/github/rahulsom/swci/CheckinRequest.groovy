@@ -9,5 +9,5 @@ import java.time.Instant
 @CompileStatic
 class CheckinRequest {
     Instant checkinTime
-    String confirmationNumber, firstName, lastName
+    String confirmationNumber, firstName, lastName, username, email
 }

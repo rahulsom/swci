@@ -17,7 +17,7 @@ class GoogleSubscriber {
     @SuppressWarnings("GroovyInfiniteLoopStatement")
     static void runReadLoop(SubscriberClient subscriberClient, SubscriptionName subscriptionName) {
         while (true) {
-            println "Pulling..."
+            print "\r[${new Date().format('yyyy-MM-dd HH:mm:ss')}] Pulling...                      "
             try {
                 def response = subscriberClient.pull(subscriptionName, false, 10)
                 response.receivedMessagesList.each {
@@ -25,6 +25,7 @@ class GoogleSubscriber {
                     mapper.findAndRegisterModules()
 
                     def request = mapper.readValue(it.message.data.toStringUtf8(), CheckinRequest)
+                    println ''
                     println request
                     def dsl = DSL.using(ConnectionManager.sql.connection)
                     insertOrUpdate(dsl, request)
@@ -33,6 +34,7 @@ class GoogleSubscriber {
                     subscriberClient.acknowledge(subscriptionName, [it.ackId])
                 }
             } catch (Exception e) {
+                println ''
                 println "Exception occurred"
                 e.printStackTrace()
                 sleep 10000
@@ -66,6 +68,8 @@ class GoogleSubscriber {
                 set(REQUESTS.CONFIRMATIONNUMBER, request.confirmationNumber).
                 set(REQUESTS.FIRSTNAME, request.firstName).
                 set(REQUESTS.LASTNAME, request.lastName).
+                set(REQUESTS.USERNAME, request.username).
+                set(REQUESTS.EMAIL, request.email).
                 set(REQUESTS.CHECKINTIME, Timestamp.from(request.checkinTime)).
                 execute()
     }
@@ -73,6 +77,8 @@ class GoogleSubscriber {
         dsl.update(REQUESTS).
                 set(REQUESTS.FIRSTNAME, request.firstName).
                 set(REQUESTS.LASTNAME, request.lastName).
+                set(REQUESTS.USERNAME, request.username).
+                set(REQUESTS.EMAIL, request.email).
                 set(REQUESTS.CHECKINTIME, Timestamp.from(request.checkinTime)).
                 where(REQUESTS.CONFIRMATIONNUMBER.equal(request.confirmationNumber)).
                 execute()

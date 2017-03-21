@@ -19,6 +19,7 @@ class ScheduledExecutor {
                     fetch()
 
             requestsDue.listIterator().each { row ->
+                println ''
                 println row
                 new CheckinSupport().checkin(row.confirmationnumber, row.firstname, row.lastname)
                 dsl.deleteFrom(REQUESTS).where(REQUESTS.ID.eq(row.id)).execute()

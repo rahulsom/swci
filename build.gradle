@@ -6,7 +6,8 @@ buildscript {
 
 plugins {
     id 'nu.studer.jooq' version '2.0.4'
-    id "org.flywaydb.flyway" version "4.1.2"
+    id 'org.flywaydb.flyway' version '4.1.2'
+    id 'com.github.johnrengelman.shadow' version '1.2.4'
 }
 
 group 'com.github.rahulsom'
@@ -28,13 +29,17 @@ dependencies {
     compile 'org.gebish:geb-core:1.1.1'
     compile 'org.seleniumhq.selenium:selenium-chrome-driver:3.3.1'
 
+    // Google Cloud Pubsub is how we get our messages
     compile 'com.google.cloud:google-cloud-pubsub:0.9.4-alpha'
 
+    // H2 needs to be in multiple scopes for jooq and flyway to work
     compile 'com.h2database:h2:1.4.194'
     jooqRuntime 'com.h2database:h2:1.4.194'
 
+    // JOOQ is a poor man's hibernate
     compile 'org.jooq:jooq'
 
+    // Jackson is used for parsing messages from Google Pubsub
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.6'
     compile 'com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.6'
 
