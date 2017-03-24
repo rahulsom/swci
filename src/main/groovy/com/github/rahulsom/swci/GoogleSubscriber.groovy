@@ -1,6 +1,7 @@
 package com.github.rahulsom.swci
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.google.api.gax.grpc.ApiException
 import com.google.cloud.pubsub.spi.v1.SubscriberClient
 import com.google.pubsub.v1.SubscriptionName
 import groovy.transform.CompileStatic
@@ -28,11 +29,15 @@ class GoogleSubscriber {
                     println ''
                     println request
                     def dsl = DSL.using(ConnectionManager.sql.connection)
-                    insertOrUpdate(dsl, request)
+                    println "Inserting..."
+                    insertRequest(dsl, request)
                     printRequests(dsl)
                     dsl.close()
                     subscriberClient.acknowledge(subscriptionName, [it.ackId])
                 }
+            } catch (ApiException e) {
+                println ''
+                println e.message
             } catch (Exception e) {
                 println ''
                 println "Exception occurred"
@@ -41,27 +46,12 @@ class GoogleSubscriber {
             }
         }
     }
+
     private static void printRequests(DSLContext dsl) {
         def records = dsl.selectFrom(REQUESTS).fetch()
         records.listIterator().each { println it.valuesRow() }
     }
-    private static void insertOrUpdate(DSLContext dsl, CheckinRequest request) {
-        int matches = getCount(dsl, request)
-        if (matches) {
-            println "Updating..."
-            updateRequest(dsl, request)
-        } else {
-            println "Inserting..."
-            insertRequest(dsl, request)
-        }
-    }
-    private static int getCount(DSLContext dsl, CheckinRequest request) {
-        def matches = dsl.selectCount().
-                from(REQUESTS).
-                where(REQUESTS.CONFIRMATIONNUMBER.equal(request.confirmationNumber)).
-                fetchOne().value1()
-        matches
-    }
+
     private static int insertRequest(DSLContext dsl, CheckinRequest request) {
         dsl.insertInto(REQUESTS).
                 set(REQUESTS.ID, UUID.randomUUID().toString()).
@@ -73,16 +63,7 @@ class GoogleSubscriber {
                 set(REQUESTS.CHECKINTIME, Timestamp.from(request.checkinTime)).
                 execute()
     }
-    private static int updateRequest(DSLContext dsl, CheckinRequest request) {
-        dsl.update(REQUESTS).
-                set(REQUESTS.FIRSTNAME, request.firstName).
-                set(REQUESTS.LASTNAME, request.lastName).
-                set(REQUESTS.USERNAME, request.username).
-                set(REQUESTS.EMAIL, request.email).
-                set(REQUESTS.CHECKINTIME, Timestamp.from(request.checkinTime)).
-                where(REQUESTS.CONFIRMATIONNUMBER.equal(request.confirmationNumber)).
-                execute()
-    }
+
     static SubscriptionName getSubscriptionName(String projectId, String subscriptionId) {
         SubscriptionName.
                 newBuilder().
