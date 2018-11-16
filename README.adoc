@@ -1,0 +1,4 @@
+= SWCI
+
+Southwest Checkin. Script checking in to your southwest flight.
+
