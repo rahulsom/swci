@@ -1,2 +1,3 @@
 rootProject.name = 'swci'
 
+enableFeaturePreview('STABLE_PUBLISHING')

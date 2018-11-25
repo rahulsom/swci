@@ -1,7 +1,14 @@
-group 'com.github.rahulsom'
-version '1.0-SNAPSHOT'
+plugins {
+    id "nebula.maven-publish" version "9.2.0"
+    id "nebula.javadoc-jar" version "9.2.0"
+    id "nebula.source-jar" version "9.2.0"
+    id "nebula.release" version "9.0.0"
+    id "nebula.nebula-bintray" version "4.0.2"
+//    id "com.jfrog.artifactory" version "4.8.1"
+    id "groovy"
+}
 
-apply plugin: 'groovy'
+group 'com.github.rahulsom.swci'
 
 repositories {
     jcenter()
@@ -13,3 +20,28 @@ dependencies {
     compile 'org.gebish:geb-core:1.1.1'
     compile 'org.seleniumhq.selenium:selenium-chrome-driver:3.3.1'
 }
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+    pkg {
+        userOrg = "rahulsom"
+        repo = "m2"
+        websiteUrl = "https://github.com/rahulsom/swci"
+        issueTrackerUrl = "https://github.com/rahulsom/swci/issues"
+        vcsUrl = "https://github.com/rahulsom/swci.git"
+        licenses = ["Apache-2.0"]
+        labels = ["southwest"]
+    }
+}
+
+artifactory {
+    publish {
+        repository {
+            username = System.getenv("BINTRAY_USER")
+            password = System.getenv("BINTRAY_KEY")
+        }
+    }
+}
+
+bintrayUpload.dependsOn 'sourceJar', 'javadocJar'
