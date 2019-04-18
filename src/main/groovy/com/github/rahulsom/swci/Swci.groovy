@@ -75,6 +75,7 @@ class Swci {
         println("lastName: $lastName")
 
         def result = checkin(confirmationNumber, firstName, lastName)
+        new File("build/gebreports/swci.properties").text = "POSITION=${result.position}"
         println result
         assert result.success
     }
