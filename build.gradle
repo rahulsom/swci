@@ -1,6 +1,6 @@
 plugins {
     id "nebula.maven-publish" version "9.5.4"
-    id "nebula.javadoc-jar" version "9.5.4"
+    id "nebula.javadoc-jar" version "18.4.0"
     id "nebula.source-jar" version "9.5.4"
     id "nebula.release" version "9.2.2"
     id "nebula.nebula-bintray" version "4.0.2"
