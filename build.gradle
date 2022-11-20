@@ -27,7 +27,7 @@ dependencies {
 
     runtime 'org.slf4j:slf4j-simple:1.7.+'
 
-    testCompile 'org.spockframework:spock-core:2.1-groovy-3.0'
+    testCompile 'org.spockframework:spock-core:2.3-groovy-4.0'
 }
 
 bintray {
