@@ -2,7 +2,7 @@ plugins {
     id "nebula.maven-publish" version "18.4.0"
     id "nebula.javadoc-jar" version "18.4.0"
     id "nebula.source-jar" version "18.4.0"
-    id "nebula.release" version "17.2.1"
+    id "nebula.release" version "17.2.2"
     id "nebula.nebula-bintray" version "8.5.0"
 //    id "com.jfrog.artifactory" version "4.8.1"
     id "groovy"
