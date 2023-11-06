@@ -22,7 +22,7 @@ mainClassName = 'com.github.rahulsom.swci.Swci'
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.5.+'
     compile 'io.github.bonigarcia:webdrivermanager:3.+'
-    compile 'org.gebish:geb-core:2.+'
+    compile 'org.gebish:geb-core:7.+'
     compile 'org.seleniumhq.selenium:selenium-chrome-driver:3.+'
 
     runtime 'org.slf4j:slf4j-simple:1.7.+'
