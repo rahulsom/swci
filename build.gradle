@@ -20,7 +20,7 @@ repositories {
 mainClassName = 'com.github.rahulsom.swci.Swci'
 
 dependencies {
-    compile 'org.codehaus.groovy:groovy-all:2.5.+'
+    compile 'org.codehaus.groovy:groovy-all:3.0.+'
     compile 'io.github.bonigarcia:webdrivermanager:3.+'
     compile 'org.gebish:geb-core:2.+'
     compile 'org.seleniumhq.selenium:selenium-chrome-driver:3.+'
